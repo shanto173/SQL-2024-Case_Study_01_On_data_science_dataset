@@ -25,7 +25,7 @@ The dataset contains valuable information regarding salaries, work conditions, a
 
 - **job_title**: The role worked in during the year (e.g., Data Scientist, Machine Learning Engineer).
 
-- **salary**: The total gross salary amount paid.
+- **Salary**: The total gross salary amount paid.
 
 - **salary_currency**: The currency of the salary paid, following the ISO 4217 currency code standard.
 
@@ -47,7 +47,7 @@ The dataset contains valuable information regarding salaries, work conditions, a
 
 ### Case Study Questions and SQL Queries
 
-#### 1. Pinpoint Countries with Fully Remote Manager Jobs Paying Over $90,000 USD
+#### 1. You're a Compensation analyst employed by a multinational corporation. Your Assignment is to Pinpoint Countries who give work fully remotely, for the title 'managers’ Paying salaries Exceeding $90,000 USD
 **Objective**: Identify countries offering fully remote managerial roles with salaries exceeding $90,000 USD.
 
 ```SQL
@@ -92,7 +92,7 @@ where job_title like '%manager%' and remote_ratio = 100 and salary > 90000;
     FR (France)
 
 
-#### 2. Identify Top 5 Countries with the Most Large Companies Offering Entry-Level Jobs (HR Tech Focus)
+#### 2. AS a remote work advocate Working for a progressive HR tech startup who places their freshers’ clients IN large tech firms. you're tasked WITH Identifying top 5 Country Having greatest count of large (company size) number of companies.
 **Objective**: Identify the top 5 countries with the highest number of large companies (company size 'L').
 
 ```SQL
@@ -114,8 +114,7 @@ group by company_location order by count(company_size) desc limit 5;
 
 
 
-#### 3. Percentage of Employees with Fully Remote Roles and Salaries Above $100,000 USD
-**Objective**: Calculate the percentage of employees enjoying fully remote roles with salaries exceeding $100,000 USD.
+#### 3. Picture yourself AS a data scientist Working for a workforce management platform. Your objective is to calculate the percentage of employees. Who enjoy fully remote roles with salaries exceeding $100,000 USD, Shed light on the attractiveness of high-paying remote positions IN today's job market.
 
 ```SQL
 select ((select count(*) from salaries where salary > 100000 and remote_ratio =100)
@@ -141,8 +140,7 @@ select @percentage;
 
 
 
-#### 4. Locations with Entry-Level Salaries Above Market Average
-**Objective**: Identify locations where entry-level average salaries exceed the market average for entry-level positions.
+#### 4. Imagine you're a data analyst Working for a global recruitment agency. Your Task is to identify the Locations where entry-level average salaries exceed the average salary for that job title IN market for entry-level, helping your agency guide candidates toward lucrative opportunities.
 
 ```SQL
 select t1.job_title,t2.company_location,t1.average,t2.average_per_country from
@@ -161,34 +159,80 @@ where experience_level = 'EN' group by company_location,job_title)
 
 
 
-#### 5. Countries with Maximum Average Salary by Job Title
-**Objective**: Identify the country that pays the maximum average salary for each job title.
+#### 5. You've been hired by a big HR Consultancy to look at how much people get paid IN different Countries. Your job is to Find out for each job title which Country pays the maximum average salary. This helps you to place your candidates IN those countries.
 
-```sql
-SELECT job_title, company_location, MAX(avg_salary) AS max_avg_salary
-FROM (
-    SELECT job_title, company_location, AVG(salary_in_usd) AS avg_salary
-    FROM salaries
-    GROUP BY job_title, company_location
-) AS salary_data
-GROUP BY job_title, company_location;
+```SQL
+# Without using the window function;
+
+select t2.company_location,t2.job_title,t1.max_avg from 
+
+(select job_title,max(avg_sal) as 'max_avg' from
+(select company_location,job_title,avg(salary_in_usd) as 'avg_sal' from salaries
+GROUP BY company_location,job_title order by job_title)t group by job_title order by job_title) t1 
+
+join 
+
+(select company_location,job_title,avg(salary_in_usd) as 'avg_sal' from salaries
+GROUP BY company_location,job_title order by job_title) t2
+
+on t1.job_title = t2.job_title where t1.max_avg = avg_sal order by job_title;
+
+
+
+
+# With window function
+
+select * from (
+
+select company_location,job_title,avg(salary),
+dense_rank() over(PARTITION BY job_title order by avg(salary) desc) as salary_rank 
+from salaries
+GROUP BY company_location,job_title
+order by job_title) t 
+
+where salary_rank = 1
+; 
+
+
+
 ```
 
-#### 6. Locations with Consistently Increasing Salaries (2022-2024)
-**Objective**: Find locations where average salaries have consistently increased over the past three years (2022-2024).
+![entry-level average salaries exceed the market average salry](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/5.png)
 
-```sql
-WITH yearly_salaries AS (
-    SELECT company_location, work_year, AVG(salary_in_usd) AS avg_salary
-    FROM salaries
-    WHERE work_year IN (2022, 2023, 2024)
-    GROUP BY company_location, work_year
-)
-SELECT company_location
-FROM yearly_salaries
-GROUP BY company_location
-HAVING MIN(avg_salary) < MAX(avg_salary);
+
+
+#### 6. As a data-driven Business consultant, you've been hired by a multinational corporation to analyze salary trends across different company Locations. Your goal is to Pinpoint Locations WHERE the average salary Has consistently increased over the past few years (Countries WHERE data is available for 3 years Only(the present year and past two years) providing Insights into Locations experiencing Sustained salary growth.
+
+
+```SQL
+with temp as (
+	select * from salaries where company_location in (
+
+	select company_location from 
+	(
+	select company_location,avg(salary),count(distinct work_year)
+	from salaries where work_year >= (year(current_date()))-2
+	GROUP BY company_location
+	having count(DISTINCT work_year) =3
+	order by company_location
+	) t 
+	))
+    
+    
+select company_location,
+
+max(case when work_year = 2022 then avg_salary end) as 'Average_2022',
+max(case when work_year = 2023 then avg_salary end) as 'Average_2023',
+max(case when work_year = 2024 then avg_salary end) as 'Average_2024'
+from (
+select company_location,work_year,avg(salary_in_usd) as avg_salary from temp
+group by company_location,work_year order by company_location) t
+group by company_location having Average_2024 > Average_2023 and Average_2023 > Average_2022
+; 
 ```
+
+![Average salary increase trend](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/6.png)
+
 
 #### 7. Percentage of Fully Remote Work by Experience Level (2021 vs. 2024)
 **Objective**: Determine the percentage of fully remote work for each experience level in 2021 and 2024, highlighting significant changes.
