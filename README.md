@@ -178,6 +178,17 @@ GROUP BY company_location,job_title order by job_title) t2
 on t1.job_title = t2.job_title where t1.max_avg = avg_sal order by job_title;
 
 
+# updated version and fast version of the above query
+
+
+select * from (
+select company_location,job_title,avg(salary) 'avg_salary_in_country',
+max(avg(salary)) over(PARTITION BY job_title) 'max_avg_salary'
+from salaries
+group by company_location,job_title
+)t where avg_salary_in_country = max_avg_salary
+;
+
 
 
 # With window function
