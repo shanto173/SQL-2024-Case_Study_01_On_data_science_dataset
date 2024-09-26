@@ -45,10 +45,10 @@ The dataset contains valuable information regarding salaries, work conditions, a
   - **M**: Medium company (50 to 250 employees).
   - **L**: Large company (more than 250 employees).
 
-### Case Study Questions and SQL Queries
+# Case Study Questions and SQL Queries
 
-#### 1. You're a Compensation analyst employed by a multinational corporation. Your Assignment is to Pinpoint Countries who give work fully remotely, for the title 'managers’ Paying salaries Exceeding $90,000 USD
-**Objective**: Identify countries offering fully remote managerial roles with salaries exceeding $90,000 USD.
+## 1. You're a Compensation analyst employed by a multinational corporation. Your Assignment is to Pinpoint Countries who give work fully remotely, for the title 'managers’ Paying salaries Exceeding $90,000 USD
+
 
 ```SQL
 SELECT DISTINCT (t.company_location) 
@@ -92,8 +92,8 @@ where job_title like '%manager%' and remote_ratio = 100 and salary > 90000;
     FR (France)
 
 
-#### 2. AS a remote work advocate Working for a progressive HR tech startup who places their freshers’ clients IN large tech firms. you're tasked WITH Identifying top 5 Country Having greatest count of large (company size) number of companies.
-**Objective**: Identify the top 5 countries with the highest number of large companies (company size 'L').
+## 2. As a remote work advocate Working for a progressive HR tech startup who places their freshers’ clients IN large tech firms. you're tasked WITH Identifying top 5 Country Having greatest count of large (company size) number of companies.
+
 
 ```SQL
 select company_location,count(company_size) from salaries
@@ -114,7 +114,7 @@ group by company_location order by count(company_size) desc limit 5;
 
 
 
-#### 3. Picture yourself AS a data scientist Working for a workforce management platform. Your objective is to calculate the percentage of employees. Who enjoy fully remote roles with salaries exceeding $100,000 USD, Shed light on the attractiveness of high-paying remote positions IN today's job market.
+## 3. Picture yourself AS a data scientist Working for a workforce management platform. Your objective is to calculate the percentage of employees. Who enjoy fully remote roles with salaries exceeding $100,000 USD, Shed light on the attractiveness of high-paying remote positions IN today's job market.
 
 ```SQL
 select ((select count(*) from salaries where salary > 100000 and remote_ratio =100)
@@ -140,7 +140,7 @@ select @percentage;
 
 
 
-#### 4. Imagine you're a data analyst Working for a global recruitment agency. Your Task is to identify the Locations where entry-level average salaries exceed the average salary for that job title IN market for entry-level, helping your agency guide candidates toward lucrative opportunities.
+## 4. Imagine you're a data analyst Working for a global recruitment agency. Your Task is to identify the Locations where entry-level average salaries exceed the average salary for that job title IN market for entry-level, helping your agency guide candidates toward lucrative opportunities.
 
 ```SQL
 select t1.job_title,t2.company_location,t1.average,t2.average_per_country from
@@ -159,7 +159,7 @@ where experience_level = 'EN' group by company_location,job_title)
 
 
 
-#### 5. You've been hired by a big HR Consultancy to look at how much people get paid IN different Countries. Your job is to Find out for each job title which Country pays the maximum average salary. This helps you to place your candidates IN those countries.
+## 5. You've been hired by a big HR Consultancy to look at how much people get paid IN different Countries. Your job is to Find out for each job title which Country pays the maximum average salary. This helps you to place your candidates IN those countries.
 
 ```SQL
 # Without using the window function;
@@ -212,7 +212,7 @@ where salary_rank = 1
 
 
 
-#### 6. As a data-driven Business consultant, you've been hired by a multinational corporation to analyze salary trends across different company Locations. Your goal is to Pinpoint Locations WHERE the average salary Has consistently increased over the past few years (Countries WHERE data is available for 3 years Only(the present year and past two years) providing Insights into Locations experiencing Sustained salary growth.
+## 6. As a data-driven Business consultant, you've been hired by a multinational corporation to analyze salary trends across different company Locations. Your goal is to Pinpoint Locations WHERE the average salary Has consistently increased over the past few years (Countries WHERE data is available for 3 years Only(the present year and past two years) providing Insights into Locations experiencing Sustained salary growth.
 
 
 ```SQL
@@ -249,46 +249,78 @@ group by company_location having Average_2024 > Average_2023 and Average_2023 > 
 * The salary trends from 2022 to 2024 show a general increase across all countries, with the largest growth seen in Argentina (AR) from 50,000 to 88,500 and Hungary (HU) from 17,684 to 63,333. Canada (CA) maintains the highest average salary, increasing steadily from 126,009 in 2022 to 153,611 in 2024. The upward trend indicates improving salary packages across various countries, reflecting positive economic or industry growth.
 
 
-#### 7. Percentage of Fully Remote Work by Experience Level (2021 vs. 2024)
-**Objective**: Determine the percentage of fully remote work for each experience level in 2021 and 2024, highlighting significant changes.
+## 7.  Picture yourself AS a workforce strategist employed by a global HR tech startup. Your Mission is to Determine the percentage of fully remote work for each experience level IN 2021 and compare it WITH the corresponding figures for 2024, Highlighting any significant Increases or decreases IN remote work Adoption over the years.
 
-```sql
-SELECT 
-    experience_level, 
-    SUM(CASE WHEN work_year = 2021 THEN remote_ratio ELSE 0 END) / COUNT(*) AS remote_2021,
-    SUM(CASE WHEN work_year = 2024 THEN remote_ratio ELSE 0 END) / COUNT(*) AS remote_2024
-FROM salaries
-GROUP BY experience_level;
+
+```SQL
+select n1.experience_level,n1.total_remote_percentage_2021,n2.total_remote_percentage_2024 from (
+
+select t1.experience_level,t1.total_2021,t2.remote_2021,remote_2021/total_2021 as 'total_remote_percentage_2021' from (
+
+select experience_level,count(*) as 'total_2021'
+from salaries 
+where work_year = 2021
+group by experience_level
+) t1
+join (
+select experience_level,count(*) as 'remote_2021'
+from salaries 
+where work_year = 2021 and remote_ratio = 100
+group by experience_level
+)t2 on t1.experience_level = t2.experience_level 
+) n1
+join (
+
+select t1.experience_level,t1.total_2024,t2.remote_2024,remote_2024/total_2024 as 'total_remote_percentage_2024' from (
+
+select experience_level,count(*) as 'total_2024'
+from salaries 
+where work_year = 2024
+group by experience_level
+) t1
+join (
+select experience_level,count(*) as 'remote_2024'
+from salaries 
+where work_year = 2024 and remote_ratio = 100
+group by experience_level
+)t2 on t1.experience_level = t2.experience_level 
+) n2
+on n1.experience_level = n2.experience_level
+
 ```
 
-#### 8. Average Salary Increase by Experience Level and Job Title (2023-2024)
-**Objective**: Calculate the average salary increase percentage for each experience level and job title between 2023 and 2024.
+![percentage of fully remote work](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/7.png)
 
-```sql
-WITH salary_2023 AS (
-    SELECT job_title, experience_level, AVG(salary_in_usd) AS avg_salary_2023
-    FROM salaries
-    WHERE work_year = 2023
-    GROUP BY job_title, experience_level
-), salary_2024 AS (
-    SELECT job_title, experience_level, AVG(salary_in_usd) AS avg_salary_2024
-    FROM salaries
-    WHERE work_year = 2024
-    GROUP BY job_title, experience_level
-)
-SELECT 
-    s2023.job_title, 
-    s2023.experience_level, 
-    ((s2024.avg_salary_2024 - s2023.avg_salary_2023) / s2023.avg_salary_2023) * 100 AS salary_increase_percentage
-FROM salary_2023 s2023
-JOIN salary_2024 s2024
-ON s2023.job_title = s2024.job_title AND s2023.experience_level = s2024.experience_level;
+
+## 8. As a Compensation specialist at a Fortune 500 company, you're tasked WITH analyzing salary trends over time. Your objective is to calculate the average salary increase percentage for each experience level and job title between the years 2023 and 2024, helping the company stay competitive IN the talent market.
+
+
+```SQL
+select t1.experience_level,t2.job_title,t1.avg_salary_2023,t2.avg_salary_2024,
+((t2.avg_salary_2024 - t1.avg_salary_2023)/t1.avg_salary_2023)*100 as 'increase_salary'
+
+ from (
+
+select experience_level,job_title,avg(salary) 'avg_salary_2023'
+from salaries where work_year in (2023)
+group by experience_level,job_title
+)t1
+join( 
+select experience_level,job_title,avg(salary) 'avg_salary_2024'
+from salaries where work_year = 2024
+group by experience_level,job_title)t2
+
+on t1.experience_level = t2.experience_level and t1.job_title = t2.job_title
+;
+
 ```
+
+![percentage of fully remote work](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/8.png)
 
 #### 9. Implementing Role-Based Access Control (RBAC) for Experience Levels
 **Objective**: Create role-based access control so employees can access details relevant only to their respective experience levels.
 
-```sql
+```SQL
 -- Pseudocode for RBAC implementation
 -- Define roles for each experience level (e.g., 'EN', 'MI', 'SE', 'EX')
 CREATE ROLE entry_level_access;
