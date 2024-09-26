@@ -244,6 +244,10 @@ group by company_location having Average_2024 > Average_2023 and Average_2023 > 
 
 ![Average salary increase trend](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/6.png)
 
+![Average salary increase trend](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/salary_2022%2C%20salary_2023%20and%20salary_2024.png)
+
+* The salary trends from 2022 to 2024 show a general increase across all countries, with the largest growth seen in Argentina (AR) from 50,000 to 88,500 and Hungary (HU) from 17,684 to 63,333. Canada (CA) maintains the highest average salary, increasing steadily from 126,009 in 2022 to 153,611 in 2024. The upward trend indicates improving salary packages across various countries, reflecting positive economic or industry growth.
+
 
 #### 7. Percentage of Fully Remote Work by Experience Level (2021 vs. 2024)
 **Objective**: Determine the percentage of fully remote work for each experience level in 2021 and 2024, highlighting significant changes.
