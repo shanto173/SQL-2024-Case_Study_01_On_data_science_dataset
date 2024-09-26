@@ -1,6 +1,41 @@
 
 # Data Science Jobs SQL Case Study
 
+
+
+
+1. [Project Overview](#project-overview)
+
+2. [Dataset Description](#dataset-description)
+   
+3. [Case Study Questions and SQL Queries](#case-study-questions-and-sql-queries)
+   
+4. [Pinpoint countries offering fully remote jobs for 'Manager' titles with salaries exceeding $90,000 USD](#1-youre-a-compensation-analyst-employed-by-a-multinational-corporation-your-assignment-is-to-pinpoint-countries-who-give-work-fully-remotely-for-the-title-managers-paying-salaries-exceeding-90000-usd)
+	
+5. [Identify top 5 countries with the greatest number of large companies](#2-as-a-remote-work-advocate-working-for-a-progressive-hr-tech-startup-who-places-their-freshers-clients-in-large-tech-firms-youre-tasked-with-identifying-top-5-country-having-greatest-count-of-large-company-size-number-of-companies)
+
+6. [Calculate the percentage of employees enjoying fully remote roles with salaries exceeding $100,000 USD](#3-picture-yourself-as-a-data-scientist-working-for-a-workforce-management-platform-your-objective-is-to-calculate-the-percentage-of-employees-who-enjoy-fully-remote-roles-with-salaries-exceeding-100000-usd-shed-light-on-the-attractiveness-of-high-paying-remote-positions-in-todays-job-market)
+
+7. [Identify locations where entry-level average salaries exceed market average for the same job title](#4-imagine-youre-a-data-analyst-working-for-a-global-recruitment-agency-your-task-is-to-identify-the-locations-where-entry-level-average-salaries-exceed-the-average-salary-for-that-job-title-in-market-for-entry-level-helping-your-agency-guide-candidates-toward-lucrative-opportunities)
+
+8. [Identify which country pays the maximum average salary for each job title](#5-youve-been-hired-by-a-big-hr-consultancy-to-look-at-how-much-people-get-paid-in-different-countries-your-job-is-to-find-out-for-each-job-title-which-country-pays-the-maximum-average-salary-this-helps-you-to-place-your-candidates-in-those-countries)
+
+9. [Pinpoint locations with consistent salary growth over the past few years](#6-as-a-data-driven-business-consultant-youve-been-hired-by-a-multinational-corporation-to-analyze-salary-trends-across-different-company-locations-your-goal-is-to-pinpoint-locations-where-the-average-salary-has-consistently-increased-over-the-past-few-years-countries-where-data-is-available-for-3-years-onlythe-present-year-and-past-two-years-providing-insights-into-locations-experiencing-sustained-salary-growth)
+
+10. [Compare remote work adoption percentages across experience levels between 2021 and 2024](#7--picture-yourself-as-a-workforce-strategist-employed-by-a-global-hr-tech-startup-your-mission-is-to-determine-the-percentage-of-fully-remote-work-for-each-experience-level-in-2021-and-compare-it-with-the-corresponding-figures-for-2024-highlighting-any-significant-increases-or-decreases-in-remote-work-adoption-over-the-years)
+
+11. [Calculate the average salary increase percentage for each experience level and job title between 2023 and 2024](#8-as-a-compensation-specialist-at-a-fortune-500-company-youre-tasked-with-analyzing-salary-trends-over-time-your-objective-is-to-calculate-the-average-salary-increase-percentage-for-each-experience-level-and-job-title-between-the-years-2023-and-2024-helping-the-company-stay-competitive-in-the-talent-market)
+
+12. [Implement role-based access control for employees based on experience level](#9-youre-a-database-administrator-tasked-with-role-based-access-control-for-a-companys-employee-database-your-goal-is-to-implement-a-security-measure-where-employees-in-different-experience-level-eg-entry-level-senior-level-etc-can-only-access-details-relevant-to-their-respective-experience-level-ensuring-data-confidentiality-and-minimizing-the-risk-of-unauthorized-access)
+
+13.[Conclusion](#conclusion)
+
+
+
+
+
+
+
 ## Project Overview
 This case study involves analyzing salary data from a multinational corporation. As a **Compensation Analyst** and other roles, the objective is to provide insights into salary trends, remote work, and company sizes across different countries and job titles.
 
@@ -317,19 +352,19 @@ on t1.experience_level = t2.experience_level and t1.job_title = t2.job_title
 
 ![percentage of fully remote work](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/8.png)
 
-#### 9. Implementing Role-Based Access Control (RBAC) for Experience Levels
-**Objective**: Create role-based access control so employees can access details relevant only to their respective experience levels.
+## 9. You're a database administrator tasked with role-based access control for a company's employee database. Your goal is to implement a security measure where employees in different experience level (e.g. Entry Level, Senior level etc.) can only access details relevant to their respective experience level, ensuring data confidentiality and minimizing the risk of unauthorized access.
+
 
 ```SQL
--- Pseudocode for RBAC implementation
--- Define roles for each experience level (e.g., 'EN', 'MI', 'SE', 'EX')
-CREATE ROLE entry_level_access;
-CREATE ROLE mid_level_access;
-CREATE ROLE senior_level_access;
--- Assign access to relevant tables and columns for each role
-GRANT SELECT ON salaries TO entry_level_access WHERE experience_level = 'EN';
-GRANT SELECT ON salaries TO mid_level_access WHERE experience_level = 'MI';
-GRANT SELECT ON salaries TO senior_level_access WHERE experience_level = 'SE';
+Create user 'Entry_Level'@'%'  identified by 'EN';
+
+create view  EntrY_Level as(
+select * from salaries where experience_level = 'EN'
+);
+
+grant select on sql_case_studys.entry_level to 'Entry_level'@'%';
+
+show PRIVILEGES;
 ```
 
 ### Conclusion
