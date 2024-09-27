@@ -571,7 +571,7 @@ end
 
 
 
-### 1.9 In the year 2024, due to increased demand in the data industry, there was an increase in salaries of data field employees.Entry Level-35% of the salary.Mid junior – 30% of the salary.Immediate senior level- 22% of the salary.Expert level- 20% of the salary. You must update the salaries accordingly and update them back in the original database.
+### 1.9 You are a researcher and you have been assigned the task of finding the year with the highest average salary for each job title.
 
 ```SQL
 
@@ -593,6 +593,28 @@ where t.ranks = 1
 ![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.9.png)
 
 
+
+### 1.10 You have been hired by a market research agency where you been assigned the task to show the percentage of different employment type (full time, part time) in Different job roles, in the format where each row will be job title, each column will be type of employment type and  cell value  for that row and column will show the % value
+
+```SQL
+
+
+SELECT 
+    job_title,
+    ROUND((SUM(CASE WHEN employment_type = 'PT' THEN 1 ELSE 0 END) / COUNT(*)) * 100, 2) AS PT_percentage, -- Calculate percentage of part-time employment
+    ROUND((SUM(CASE WHEN employment_type = 'FT' THEN 1 ELSE 0 END) / COUNT(*)) * 100, 2) AS FT_percentage, -- Calculate percentage of full-time employment
+    ROUND((SUM(CASE WHEN employment_type = 'CT' THEN 1 ELSE 0 END) / COUNT(*)) * 100, 2) AS CT_percentage, -- Calculate percentage of contract employment
+    ROUND((SUM(CASE WHEN employment_type = 'FL' THEN 1 ELSE 0 END) / COUNT(*)) * 100, 2) AS FL_percentage -- Calculate percentage of freelance employment
+FROM 
+    salaries
+GROUP BY 
+    job_title;
+
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.10.png)
 
 
 
