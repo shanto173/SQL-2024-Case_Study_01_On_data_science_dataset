@@ -466,10 +466,61 @@ on t1.company_location = t2.company_location
 
 
 
+### 1.5 You're a Financial analyst Working for a leading HR Consultancy, and your Task is to Assess the annual salary growth rate for various job titles. By Calculating the percentage Increase IN salary FROM previous year to this year, you aim to provide valuable Insights Into salary trends WITHIN different job roles.
+
+```SQL
+
+with temp as (
+
+select * from (
+select work_year as work_year_2023 ,job_title as 'job_title_2023',avg(salary) 'avg_sal_2023' 
+from salaries where work_year = 2023
+GROUP BY work_year,job_title) t1
+
+join (select work_year as work_year_2024,job_title as 'job_title_2024',avg(salary) 'avg_sal_2024' 
+from salaries where work_year = 2024
+GROUP BY work_year,job_title) t2
+
+on t1.job_title_2023 = t2.job_title_2024
+)
+
+select *,((avg_sal_2024-avg_sal_2023)/avg_sal_2023)*100 as 'pecentage_change_over_the_year' from temp;
+;
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.5.png)
 
 
 
 
+### 1.6 You've been hired by a global HR Consultancy to identify Countries experiencing significant salary growth for entry-level roles.Your task is to list the top three Countries with the highest salary growth rate 2020 and 2023, helping multinational Corporations identify Emerging talent markets.
+
+```SQL
+
+
+with temp as (
+
+select * from (
+select work_year as work_year_2023 ,job_title as 'job_title_2023',avg(salary) 'avg_sal_2023' 
+from salaries where work_year = 2023
+GROUP BY work_year,job_title) t1
+
+join (select work_year as work_year_2024,job_title as 'job_title_2024',avg(salary) 'avg_sal_2024' 
+from salaries where work_year = 2024
+GROUP BY work_year,job_title) t2
+
+on t1.job_title_2023 = t2.job_title_2024
+)
+
+select *,((avg_sal_2024-avg_sal_2023)/avg_sal_2023)*100 as 'pecentage_change_over_the_year' from temp;
+;
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.6.png)
 
 
 
