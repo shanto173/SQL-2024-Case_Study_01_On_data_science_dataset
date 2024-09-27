@@ -30,6 +30,8 @@
 
 13.[Conclusion](#conclusion)
 
+14.[Additional 10 case study question solved](#additional-question-case-study)
+
 
 
 
