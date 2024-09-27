@@ -528,6 +528,23 @@ select *,((avg_sal_2024-avg_sal_2023)/avg_sal_2023)*100 as 'pecentage_change_ove
 
 
 
+### 1.7 Picture yourself as a data architect responsible for database management. Companies in US and AU(Australia) decided to create a hybrid model for employees they decided that employees earning salaries exceeding $90000 USD, will be given work from home. You now need to update the remote work ratio for eligible employees, ensuring efficient remote work management while implementing appropriate error handling mechanisms for invalid input parameters.
+
+```SQL
+
+
+update salaries t1
+set remote_ration_hybrid_mode = 100 
+where salary > 90000 and company_location in ('US', 'AU') and remote_ratio in (0, 50);
+
+
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.7.png)
+
+
 
 
 
