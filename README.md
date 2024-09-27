@@ -371,3 +371,126 @@ show PRIVILEGES;
 This case study provides an in-depth look into salary trends, remote work patterns, and company size distribution across various job titles and experience levels. Each query was designed to provide specific business insights for workforce management, compensation analysis, and strategic decision-making.
 
 
+
+## Additional Question Case study
+
+### 1.1 As a market researcher, your job is to Investigate the job market for a company that analyzes workforce data. Your Task is to know how many people were employed IN different types of companies AS per their size IN 2021.
+
+```SQL
+
+SELECT company_size,count(*) FROM sql_case_studys.salaries 
+where work_year = 2021
+group by company_size
+;
+```
+
+![2021 employee number](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.1.png)
+
+
+
+### 1.2 Imagine you are a talent Acquisition specialist Working for an International recruitment agency. Your Task is to identify the top 3 job titles that command the highest average salary Among Full-time Positions IN the year 2023. However, you are Only Interested IN Countries WHERE there are more than 50 employees, Ensuring a robust sample size for your analysis.
+
+```SQL
+
+select  company_location,job_title,avg(salary_in_usd) as 'avg_sal',count(*) as 'totale_employe'
+ from salaries
+where employment_type = 'FT' and work_year = 2023
+group by company_location,job_title 
+having totale_employe > 50
+order by avg_sal desc limit 3;
+```
+
+![2021 employee number](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.2.png)
+
+
+### 1.3 As a database analyst you have been assigned the task of selecting countries where the average mid-level salary is higher than the overall mid-level salary for the year 2023.
+
+```SQL
+
+select company_location,avg(salary) 'country_avg_mid_salary' 
+from salaries where experience_level = 'MI'
+group by company_location 
+having country_avg_mid_salary >= (select avg_salary_of_mid from( 
+select experience_level,avg(salary) 'avg_salary_of_mid'
+from salaries where experience_level = 'MI' and work_year = 2023
+group by experience_level)t
+
+)
+;
+
+
+
+# Useing variable  
+
+set @overallAvg = (select avg(salary) from salaries where experience_level = 'MI' and work_year = 2023); 
+
+select company_location,avg(salary) from salaries
+where experience_level = 'MI'
+group by company_location having avg(salary) >= (select @overallAvg)
+;
+
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.3.png)
+
+
+
+
+### 1.4 As a database analyst you have been assigned the task to Identify the company locations with the highest and lowest average salary for senior-level (SE) employees in 2023.
+
+```SQL
+
+with temp as (
+(select company_location,avg(salary) as 'avg_sal'
+from salaries 
+where work_year = 2023 and experience_level = 'SE'
+group by company_location order by avg_sal desc)
+)
+
+select * from (
+select t1.company_location,t1.avg_sal,
+ROW_NUMBER() over(order by t1.avg_sal desc) 'Highest_and_lowest_avg_value'
+from temp as t1
+join  temp as t2 
+on t1.company_location = t2.company_location
+)n where Highest_and_lowest_avg_value in (1,(select count(*) from temp))
+;
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.4.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
