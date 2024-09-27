@@ -547,10 +547,50 @@ where salary > 90000 and company_location in ('US', 'AU') and remote_ratio in (0
 
 
 
+### 1.8 In the year 2024, due to increased demand in the data industry, there was an increase in salaries of data field employees.Entry Level-35% of the salary.Mid junior – 30% of the salary.Immediate senior level- 22% of the salary.Expert level- 20% of the salary. You must update the salaries accordingly and update them back in the original database.
+
+```SQL
+
+
+update salaries t1
+ set salary = case 
+
+	when experience_level = 'EN' then salary+(salary*35)/100
+	when experience_level = 'MI' then salary+(salary*30)/100
+    when experience_level = 'SE' then salary+(salary*22)/100
+    when experience_level = 'EX' then salary+(salary*20)/100 
+
+end 
+;
+
+
+
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.8.png)
+
+
+
+### 1.9 In the year 2024, due to increased demand in the data industry, there was an increase in salaries of data field employees.Entry Level-35% of the salary.Mid junior – 30% of the salary.Immediate senior level- 22% of the salary.Expert level- 20% of the salary. You must update the salaries accordingly and update them back in the original database.
+
+```SQL
+
+
+select * from (
+select work_year,job_title,max(salary),
+dense_rank() over(PARTITION BY job_title order by max(salary) desc) as ranks 
+from salaries
+group by work_year,job_title 
+order by job_title) t
+where t.ranks = 1
+;
 
 
 
 
+```
+
+![Countries where avg salary greater than overallAvg](https://github.com/shanto173/SQL-2024-Case_Study_01_On_data_science_dataset/blob/main/images/1.9.png)
 
 
 
